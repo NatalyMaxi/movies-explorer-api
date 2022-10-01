@@ -8,6 +8,21 @@ const validateUrl = (value, helpers) => {
   return helpers.message('Некоректный URL-адрес');
 };
 
+const validationLogin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+});
+
+const validationCreateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+});
+
 const validationUpdateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
@@ -38,6 +53,8 @@ const validationDeleteMovie = celebrate({
 });
 
 module.exports = {
+  validationLogin,
+  validationCreateUser,
   validationUpdateUser,
   validationCreateMovie,
   validationDeleteMovie,
