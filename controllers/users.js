@@ -1,90 +1,84 @@
-const bcrypt = require('bcryptjs'); // модуль для хеширования пароля
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const Movie = require('../models/movie');
 const NotFoundError = require('../Error/NotFoundError');
+const ForbiddenError = require('../Error/ForbiddenError');
 const CastError = require('../Error/CastError');
-const ConflictError = require('../Error/ConflictError');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
-
-// Аутентификация пользователя
-module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      // проверим существует ли такой email или пароль
-      if (!user || !password) {
-        return next(new CastError('Неверный email или пароль.'));
-      }
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
-      );
-      return res.send({ token });
-    })
-    .catch(next);
-};
-
-// Создаем нового пользователя
-module.exports.createUser = (req, res, next) => {
-  const {
-    name, email, password,
-  } = req.body;
-  bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name, email, password: hash,
-    }))
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Пользователь не найден'));
-      } return res.send({
-        name: user.name,
-        email: user.email,
-        _id: user._id,
-      });
-    })
-    .catch((err) => {
-      if (err.code === 11000) {
-        next(new ConflictError('Такой Email уже зарегистрирован'));
-      } else if (err.name === 'ValidationError') {
-        next(new CastError('Переданы некорректные данные'));
-      } else {
-        next(err);
-      }
-    });
-};
-
-// Получаем информацию о пользователе
-module.exports.getCurrentUser = (req, res, next) => {
-  const userId = req.user._id;
-  User.findById(userId).then((user) => {
-    if (!user) {
-      throw new NotFoundError('Пользователь не найден');
-    }
-    res.send(user);
-  }).catch(next);
-};
-
-// Обновляем данные пользователя
-module.exports.updateUser = async (req, res, next) => {
-  const userId = req.user._id;
-  const { name, email } = req.body;
+// GET /movies - получаем все фильмы, сохраненные пользователем
+module.exports.getMovies = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { name, email },
-      { new: true, runValidators: true },
-    );
-    if (!user) {
-      throw new NotFoundError('Пользователь не найден');
+    const owner = req.user._id;
+    const movies = await Movie.find({ owner }).populate(['owner']);
+    if (!movies) {
+      throw new NotFoundError('Фильмов не найдено');
     }
-    res.send({ data: user });
+    res.send(movies);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /movies - создаем фильм на основании переданных данных
+module.exports.createMovie = async (req, res, next) => {
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+  } = req.body;
+  const owner = req.user._id;
+  try {
+    const movie = await Movie.create({
+      country,
+      director,
+      duration,
+      year,
+      description,
+      image,
+      trailerLink,
+      owner,
+      thumbnail,
+      movieId,
+      nameRU,
+      nameEN,
+    });
+    res.send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new CastError('Переданы некорректные данные'));
-    } else if (err.code === 11000) {
-      next(new ConflictError('Такой Email уже зарегистрирован'));
+    } else {
+      next(err);
+    }
+  }
+};
+
+// DELETE /movies/:movieId - удаляем фильм из списка сохраненных
+module.exports.deleteMovie = async (req, res, next) => {
+  try {
+    const { movieId } = req.params;
+    const userId = req.user._id;
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      throw new NotFoundError('Фильм не найден');
+    }
+    const movieOwnerId = movie.owner.valueOf();
+    if (movieOwnerId !== userId) {
+      throw new ForbiddenError('Вы не можете удалить чужой фильм');
+    }
+    const isRemoved = await Movie.findByIdAndRemove(movieId);
+    if (!isRemoved) {
+      throw new NotFoundError('Фильм не найден');
+    }
+    res.send(isRemoved);
+  } catch (err) {
+    if (err.name === 'CastError') {
+      next(new CastError('Передан некорректный id фильма'));
     } else {
       next(err);
     }
