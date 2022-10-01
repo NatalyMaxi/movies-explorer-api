@@ -7,6 +7,7 @@ const { errors } = require('celebrate');
 const mongoose = require('mongoose');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./Error/NotFoundError');
 
 const { PORT = 3000 } = process.env;
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // обработчик ошибок celebrate
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line
