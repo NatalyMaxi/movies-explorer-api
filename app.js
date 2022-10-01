@@ -5,10 +5,9 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet'); // помогает защитить приложение от некоторых широко известных веб-уязвимостей путем соответствующей настройки заголовков HTTP
 const { errors } = require('celebrate');
 const mongoose = require('mongoose');
-const auth = require('./middlewares/auth');
+const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
-const NotFoundError = require('./Error/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -22,15 +21,10 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 });
 
 app.use(requestLogger); // подключаем логгер запросов
-app.use(auth); // защищает маршруты, которым нужны авторизация
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Запрашиваемая страница не найдена'));
-});
-
+app.use(routes); // подключаем роуты
 app.use(errorLogger); // подключаем логгер ошибок
-app.use(errors()); // обработчик ошибок celebrate
-app.use(errorHandler);
+app.use(errors()); // подключаем обработчик ошибок celebrate
+app.use(errorHandler); // подключаем централизированный обработчик ошибок
 
 app.listen(PORT, () => {
   // eslint-disable-next-line
