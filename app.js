@@ -6,6 +6,7 @@ const helmet = require('helmet'); // помогает защитить прил�
 const { errors } = require('celebrate');
 const mongoose = require('mongoose');
 const routes = require('./routes/index');
+const { limiter } = require('./middlewares/rateLimiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -19,7 +20,7 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
+app.use(limiter); // ограничим количество запросов для одного IP
 app.use(requestLogger); // подключаем логгер запросов
 app.use(routes); // подключаем роуты
 app.use(errorLogger); // подключаем логгер ошибок
