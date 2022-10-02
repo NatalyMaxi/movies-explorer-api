@@ -32,6 +32,6 @@ winston
 express-winston  
 express-rate-limit  
 
-IP 51.250.77.130  
-###### [Ссылка на Backend](https://)  
+IP 51.250.86.225 
+###### [Ссылка на Backend](https://api.domainname.nataly.nomoredomains.icu)  
 ###### [Ссылка на репозиторий](https://github.com/NatalyMaxi/movies-explorer-api)
