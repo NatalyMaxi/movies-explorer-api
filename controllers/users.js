@@ -32,9 +32,6 @@ module.exports.login = async (req, res, next) => {
 module.exports.createUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    if (!email && !password && !name) {
-      throw new CastError('Введите все данные');
-    }
     const hashPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       name, email, password: hashPassword,

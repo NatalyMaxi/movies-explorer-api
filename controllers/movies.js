@@ -6,8 +6,7 @@ const CastError = require('../Error/CastError');
 // GET /movies - получаем все фильмы, сохраненные пользователем
 module.exports.getMovies = async (req, res, next) => {
   try {
-    const owner = req.user._id;
-    const movies = await Movie.find({ owner }).populate(['owner']);
+    const movies = await Movie.find({});
     if (!movies) {
       throw new NotFoundError('Фильмов не найдено');
     }
