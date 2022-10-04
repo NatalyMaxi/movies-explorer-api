@@ -1,7 +1,7 @@
 {
   "name": "movies-explorer-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Дипломная работа-бэкенд приложения movies",
   "main": "app.js",
   "scripts": {
     "lint": "npx eslint .",
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/NatalyMaxi/movies-explorer-api.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Natalya Maximova",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/NatalyMaxi/movies-explorer-api/issues"

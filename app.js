@@ -21,8 +21,8 @@ mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-app.use(limiter); // ограничим количество запросов для одного IP
 app.use(requestLogger); // подключаем логгер запросов
+app.use(limiter); // ограничим количество запросов для одного IP
 app.use(routes); // подключаем роуты
 app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // подключаем обработчик ошибок celebrate

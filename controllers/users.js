@@ -40,7 +40,9 @@ module.exports.createUser = async (req, res, next) => {
       name, email, password: hashPassword,
     });
     if (user) {
-      res.send(user);
+      const newUser = user.toObject();
+      delete newUser.password;
+      res.send(newUser);
     }
   } catch (err) {
     if (err.code === 11000) {
