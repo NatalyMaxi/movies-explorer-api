@@ -4,15 +4,28 @@ const ForbiddenError = require('../Error/ForbiddenError');
 const CastError = require('../Error/CastError');
 
 // GET /movies - получаем все фильмы, сохраненные пользователем
+// module.exports.getMovies = async (req, res, next) => {
+//   try {
+//     const movies = await Movie.find({});
+//     if (!movies) {
+//       throw new NotFoundError('Фильмов не найдено');
+//     }
+//     res.send(movies);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 module.exports.getMovies = async (req, res, next) => {
+  const owner = req.user._id;
   try {
-    const movies = await Movie.find({});
-    if (!movies) {
-      throw new NotFoundError('Фильмов не найдено');
+    const movies = await Movie.find({ owner });
+    if (!movies || movies.length === 0) {
+      res.send('Фильмов не найдено');
     }
-    res.send(movies);
+    return res.send(movies);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
