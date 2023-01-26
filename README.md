@@ -49,7 +49,7 @@ password | Хеш пароля. База данных не возвращает 
 name | Имя пользователя, от 2 до 30 символов | :heavy_check_mark: string
 ### :tv: Поля схемы `movie`:
 Поле | Описание | Required(:heavy_check_mark:), type
------|------------|---------
+-----|--------------|-------
 country | Страна создания фильма | :heavy_check_mark: string
 director | Режиссёр фильма | :heavy_check_mark: string
 duration | Длительность фильма | :heavy_check_mark: number
