@@ -44,24 +44,24 @@ nginx обратный прокси-сервер
 ### :bust_in_silhouette: Поля схемы `user`:
 Поле | Описание | Required(:heavy_check_mark:), type
 -----|---------------|------
-email | Почта пользователя, уникальная для каждого пользователя. Валидируется на соответствие схеме элекстронной почты. | :heavy_check_mark: string
-password | Хеш пароля. База данных не возвращает это поле | :heavy_check_mark: string
-name | Имя пользователя, от 2 до 30 символов | :heavy_check_mark: string
+email | Почта пользователя, уникальная для каждого пользователя. Валидируется на соответствие схеме элекстронной почты. | :heavy_check_mark: `string`
+password | Хеш пароля. База данных не возвращает это поле | :heavy_check_mark: `string`
+name | Имя пользователя, от 2 до 30 символов | :heavy_check_mark: `string`
 ### :tv: Поля схемы `movie`:
 Поле | Описание | Required(:heavy_check_mark:), type
------|--------------|-------
-country | Страна создания фильма | :heavy_check_mark: string
-director | Режиссёр фильма | :heavy_check_mark: string
-duration | Длительность фильма | :heavy_check_mark: number
-year | Год выпуска фильма | :heavy_check_mark: string
-description | Описание фильма | :heavy_check_mark: string
-image | Cсылка на постер к фильму. URL-адрес | :heavy_check_mark: string
-trailer | Cсылка на трейлер фильма. URL-адрес | :heavy_check_mark: string
-thumbnail | Изображение постера к фильму. URL-адрес | :heavy_check_mark: string
-owner | _id пользователя, который сохранил статью | :heavy_check_mark: mongoose.Schema.Types.ObjectId
-movieId | id фильма, содержащееся в ответе сервиса MoviesExplorer | :heavy_check_mark: number
-nameRU | Название фильма на русском языке | :heavy_check_mark: string
-nameEN | Название фильма на английском языке | :heavy_check_mark: string
+-----|---------------|------
+country | Страна создания фильма | :heavy_check_mark: `string`
+director | Режиссёр фильма | :heavy_check_mark: `string`
+duration | Длительность фильма | :heavy_check_mark: `number`
+year | Год выпуска фильма | :heavy_check_mark: `string`
+description | Описание фильма | :heavy_check_mark: `string`
+image | Cсылка на постер к фильму. URL-адрес | :heavy_check_mark: `string`
+trailer | Cсылка на трейлер фильма. URL-адрес | :heavy_check_mark: `string`
+thumbnail | Изображение постера к фильму. URL-адрес | :heavy_check_mark: `string`
+owner | _id пользователя, который сохранил статью | :heavy_check_mark: `mongoose.Schema.Types.ObjectId`
+movieId | id фильма, содержащееся в ответе сервиса MoviesExplorer | :heavy_check_mark: `number`
+nameRU | Название фильма на русском языке | :heavy_check_mark: `string`
+nameEN | Название фильма на английском языке | :heavy_check_mark: `string`
 
 ### :five: Методы и роуты
 Метод | Роут | Описание
